@@ -11,6 +11,7 @@ interface CreateDoctorInput {
   age: number;
   phone: string;
   email: string;
+  consultationFees: number;
   status?: boolean;
 }
 

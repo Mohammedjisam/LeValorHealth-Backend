@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
+
 export interface IDoctor extends Document {
   name: string;
   qualification: string;
@@ -11,8 +12,10 @@ export interface IDoctor extends Document {
   age: number;
   phone: string;
   email: string;
+  consultationFees: number;
   status: boolean;
 }
+
 
 const doctorSchema = new Schema<IDoctor>(
   {
@@ -33,6 +36,7 @@ const doctorSchema = new Schema<IDoctor>(
     age: { type: Number, required: true },
     phone: { type: String, required: true },
     email: { type: String, required: true, unique: true },
+    consultationFees: { type: Number, required: true },
     status: { type: Boolean, default: true },
   },
   { timestamps: true }
