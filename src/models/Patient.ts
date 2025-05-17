@@ -5,7 +5,8 @@ export interface IPatient extends Document {
   name: string;
   sex: 'male' | 'female' | 'other';
   age: number;
-  address: string;
+  homeName: string;
+  place:string;
   phone: string;
   date: Date;
   renewalDate: Date;
@@ -20,7 +21,8 @@ const patientSchema = new Schema<IPatient>(
     name: { type: String, required: true },
     sex: { type: String, enum: ['male', 'female', 'other'], required: true },
     age: { type: Number, required: true },
-    address: { type: String, required: true },
+    homeName: { type: String, required: true },
+    place: { type: String, required: true },
     phone: { type: String, required: true },
     date: {
       type: Date,

@@ -6,7 +6,8 @@ interface PatientInput {
   name: string;
   sex: 'male' | 'female' | 'other';
   age: number;
-  address: string;
+  homeName: string;
+  place:string;
   phone: string;
   doctorId: string;
 }
@@ -19,7 +20,8 @@ export const createPatient = async (input: PatientInput): Promise<IPatient> => {
     name: input.name,
     sex: input.sex,
     age: input.age,
-    address: input.address,
+    homeName: input.homeName,
+    place: input.place,
     phone: input.phone,
     doctor: doctor._id,
     department: doctor.department,
