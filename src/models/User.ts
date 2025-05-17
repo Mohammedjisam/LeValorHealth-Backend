@@ -6,7 +6,7 @@ export type Role = 'receptionist' | 'PrescriptionDataEntryOperator' | 'admin';
 interface IUser extends Document {
   name: string;
   email: string;
-  phone: string; // ✅ Add this
+  phone: string; 
   password: string;
   role: Role;
   isAdminVerified: boolean;
@@ -15,7 +15,7 @@ interface IUser extends Document {
 const userSchema = new Schema<IUser>({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  phone: { type: String, required: true }, // ✅ Add this
+  phone: { type: String, required: true }, 
   password: { type: String, required: true },
   role: {
     type: String,
