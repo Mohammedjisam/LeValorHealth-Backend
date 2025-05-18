@@ -26,6 +26,7 @@ export const createPatient = async (input: PatientInput): Promise<IPatient> => {
     doctor: doctor._id,
     department: doctor.department,
     consultationFees: doctor.consultationFees,
+    prescriptionAdded: 'notAdded',
   });
 
   return await patient.save();

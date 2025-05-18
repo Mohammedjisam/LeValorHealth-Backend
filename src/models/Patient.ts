@@ -14,6 +14,7 @@ export interface IPatient extends Document {
   department: string;
   consultationFees: number;
   opNumber: string;
+  prescriptionAdded: 'added' | 'notAdded';
 }
 
 const patientSchema = new Schema<IPatient>(
@@ -43,6 +44,11 @@ const patientSchema = new Schema<IPatient>(
     },
     department: { type: String, required: true },
     consultationFees: { type: Number, required: true },
+    prescriptionAdded: {
+  type: String,
+  enum: ['added', 'notAdded'],
+  default: 'notAdded',
+},
     opNumber: {
       type: String,
       unique: true,
