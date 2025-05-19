@@ -1,12 +1,11 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
 
 export interface IPatient extends Document {
   name: string;
   sex: 'male' | 'female' | 'other';
   age: number;
   homeName: string;
-  place:string;
+  place: string;
   phone: string;
   date: Date;
   renewalDate: Date;
@@ -24,7 +23,7 @@ const patientSchema = new Schema<IPatient>(
     age: { type: Number, required: true },
     homeName: { type: String, required: true },
     place: { type: String, required: true },
-    phone: { type: String, required: true },
+    phone: { type: String, required: true, unique: true },
     date: {
       type: Date,
       default: () => new Date(),
@@ -45,17 +44,37 @@ const patientSchema = new Schema<IPatient>(
     department: { type: String, required: true },
     consultationFees: { type: Number, required: true },
     prescriptionAdded: {
-  type: String,
-  enum: ['added', 'notAdded'],
-  default: 'notAdded',
-},
+      type: String,
+      enum: ['added', 'notAdded'],
+      default: 'notAdded',
+    },
     opNumber: {
       type: String,
       unique: true,
-      default: () => `OP-${uuidv4().split('-')[0].toUpperCase()}`,
     },
   },
   { timestamps: true }
 );
+
+patientSchema.pre<IPatient>('save', async function (next) {
+  if (this.opNumber) return next();
+
+  const latestPatient = await mongoose
+    .model<IPatient>('Patient')
+    .findOne({})
+    .sort({ createdAt: -1 })
+    .select('opNumber');
+
+  let nextNumber = 1;
+  if (latestPatient && latestPatient.opNumber) {
+    const last = parseInt(latestPatient.opNumber);
+    if (!isNaN(last)) nextNumber = last + 1;
+  }
+
+  this.opNumber = String(nextNumber).padStart(4, '0');
+  next();
+});
+
+patientSchema.index({ name: 1 });
 
 export default mongoose.model<IPatient>('Patient', patientSchema);

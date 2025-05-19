@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import { createPatient, updatePatient, getActiveDoctors } from '../services/patientService';
+import { Request, Response  } from 'express';
+import { createPatient, updatePatient, getActiveDoctors ,searchPatientsService } from '../services/patientService';
 
 export const addPatient = async (req: Request, res: Response) => {
   try {
@@ -27,3 +27,14 @@ export const fetchActiveDoctors = async (req: Request, res: Response) => {
     res.status(500).json({ status: false, message: 'Failed to fetch doctors' });
   }
 };
+
+export const searchPatients = async (req: Request, res: Response) => {
+  try {
+    const query = req.query.query as string;
+    const patients = await searchPatientsService(query);
+    res.status(200).json({ status: true, data: patients });
+  } catch (error: any) {
+    res.status(500).json({ status: false, message: 'Error searching patients', error: error.message });
+  }
+};
+

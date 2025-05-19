@@ -39,3 +39,17 @@ export const updatePatient = async (id: string, input: Partial<IPatient>): Promi
 export const getActiveDoctors = async () => {
   return await Doctor.find({ status: true }).select('name _id department consultationFees');
 };
+
+export const searchPatientsService = async (query: string) => {
+  if (!query) return [];
+
+  return await Patient.find({
+    $or: [
+      { name: { $regex: query, $options: 'i' } },
+      { phone: { $regex: query, $options: 'i' } },
+      { opNumber: { $regex: query, $options: 'i' } },
+    ],
+  }).select('name phone opNumber age sex date department doctor place homeName')
+  .populate('doctor', 'name');
+};
+

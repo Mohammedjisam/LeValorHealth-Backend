@@ -1,7 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
-
 export interface IDoctor extends Document {
   name: string;
   qualification: string;
@@ -15,7 +14,6 @@ export interface IDoctor extends Document {
   consultationFees: number;
   status: boolean;
 }
-
 
 const doctorSchema = new Schema<IDoctor>(
   {
@@ -34,12 +32,18 @@ const doctorSchema = new Schema<IDoctor>(
       required: true,
     },
     age: { type: Number, required: true },
-    phone: { type: String, required: true },
+    phone: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     consultationFees: { type: Number, required: true },
     status: { type: Boolean, default: true },
   },
   { timestamps: true }
 );
+
+// ✅ Add indexes for frequently queried fields
+doctorSchema.index({ name: 1 });
+doctorSchema.index({ qualification: 1 });
+doctorSchema.index({ specialization: 1 });
+doctorSchema.index({ department: 1 });
 
 export default mongoose.model<IDoctor>('Doctor', doctorSchema);
