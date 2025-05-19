@@ -6,6 +6,7 @@ import { connectDB } from './config/db';
 import cors from 'cors'; // ✅ import cors
 import adminRoutes from '@routes/adminRoutes';
 import receptionistRoutes from '@routes/receptionistRoutes';
+import scannerRoutes from '@routes/scannerRoutes';
 
 
 dotenv.config();
@@ -21,5 +22,6 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/receptionist',receptionistRoutes)
+app.use('/api/scanner',scannerRoutes)
 
 export default app;
