@@ -23,7 +23,7 @@ const patientSchema = new Schema<IPatient>(
     age: { type: Number, required: true },
     homeName: { type: String, required: true },
     place: { type: String, required: true },
-    phone: { type: String, required: true, unique: true },
+    phone: { type: String, required: true }, 
     date: {
       type: Date,
       default: () => new Date(),
@@ -50,12 +50,13 @@ const patientSchema = new Schema<IPatient>(
     },
     opNumber: {
       type: String,
-      unique: true,
+      required: true,  // ✅ keep it required but not unique
     },
   },
   { timestamps: true }
 );
 
+// Auto-generate opNumber if not provided
 patientSchema.pre<IPatient>('save', async function (next) {
   if (this.opNumber) return next();
 
@@ -75,6 +76,9 @@ patientSchema.pre<IPatient>('save', async function (next) {
   next();
 });
 
+// ✅ Add indexes for search optimization
 patientSchema.index({ name: 1 });
+patientSchema.index({ opNumber: 1 });
+patientSchema.index({ phone: 1 });
 
 export default mongoose.model<IPatient>('Patient', patientSchema);

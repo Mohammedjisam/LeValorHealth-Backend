@@ -1,5 +1,5 @@
 import { Request, Response  } from 'express';
-import { createPatient, updatePatient, getActiveDoctors ,searchPatientsService } from '../services/patientService';
+import { createPatient, updatePatient, getActiveDoctors ,searchPatientsService,getPatientById,updatePatientDetails,getMedicalHistoryByOpNumber, addExPatientService } from '../services/patientService';
 
 export const addPatient = async (req: Request, res: Response) => {
   try {
@@ -38,3 +38,69 @@ export const searchPatients = async (req: Request, res: Response) => {
   }
 };
 
+export const getPatientDetails = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const patient = await getPatientById(id);
+
+    res.status(200).json({ status: true, data: patient });
+  } catch (error: any) {
+    res.status(404).json({ status: false, message: error.message });
+  }
+};
+
+export const updatePatientDetailsController = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const updated = await updatePatientDetails(id, req.body);
+    if (!updated) {
+      res.status(404).json({ status: false, message: 'Patient not found' });
+      return;
+    }
+
+    res.status(200).json({ status: true, message: 'Patient updated successfully', data: updated });
+  } catch (error: any) {
+    res.status(400).json({ status: false, message: error.message });
+  }
+};
+
+export const getMedicalHistory = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { opNumber } = req.params;
+
+    const records = await getMedicalHistoryByOpNumber(opNumber);
+
+    if (!records || records.length === 0) {
+      res.status(404).json({ status: false, message: 'No medical history found for this OP number' });
+      return;
+    }
+
+    res.status(200).json({ status: true, data: records });
+  } catch (error: any) {
+    res.status(500).json({ status: false, message: 'Error fetching medical history', error: error.message });
+  }
+};
+
+export const addExPatient = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { existingPatientId, doctorId } = req.body;
+
+    if (!existingPatientId || !doctorId) {
+      res.status(400).json({
+        status: false,
+        message: 'existingPatientId and doctorId are required.',
+      });
+      return;
+    }
+
+    const patient = await addExPatientService(existingPatientId, doctorId);
+
+    res.status(201).json({
+      status: true,
+      message: 'New prescription created for existing patient',
+      data: patient,
+    });
+  } catch (error: any) {
+    res.status(400).json({ status: false, message: error.message });
+  }
+};

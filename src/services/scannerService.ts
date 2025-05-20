@@ -8,9 +8,4 @@ export const getPendingPrescriptions = async () => {
     .sort({ date: -1 }); 
 };
 
-export const getAllPatients = async () => {
-  return await Patient.find({})
-    .populate('doctor', 'name')
-    .select('opNumber name phone place doctor date prescriptionAdded')
-    .sort({ date: -1 }); 
-};
+

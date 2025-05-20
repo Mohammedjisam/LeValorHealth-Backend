@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import { getPendingPrescriptions,getAllPatients  } from '../services/scannerService';
+import { getPendingPrescriptions  } from '../services/scannerService';
+import { getAllPatients } from '@services/patientService';
 
 export const fetchPendingPrescriptions = async (req: Request, res: Response) => {
   try {
